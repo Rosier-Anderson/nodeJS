@@ -4,9 +4,9 @@ const fs = require("fs");
 const fsPromises = require("fs").promises;
 const path = require("path");
 
-const logEvents = async (message) => {
+const logEvents = async (message, fileName) => {
   const logsDir = path.join(__dirname, "..", "logs");
-  const logsPath = path.join(logsDir, "eventsLog.txt");
+  const logsPath = path.join(logsDir, fileName);
   const dateTime = `${format(new Date(), "yyyy-MM-dd\tHH:mm:ss")}`;
   const logItem = `${dateTime}\t${uuid()}\t${message}\n`;
 
@@ -23,7 +23,7 @@ const logEvents = async (message) => {
 
 // Express middleware logger
 const logger = (req, res, next) => {
-  logEvents(`${req.method}\t${req.headers.origin}\t${req.url}`);
+  logEvents(`${req.method}\t${req.headers.origin}\t${req.url}`, 'reqLog.txt');
   next();
 };
 
