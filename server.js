@@ -21,22 +21,25 @@ app.use("/subdir", express.static(path.join(__dirname, "/public")));
 // use the logger middleware function
 app.use(logger);
 // validate the cors acces
-const whiteList = ["http://127.0.0.1:3500", "http://localhost:3500"];
+const whiteList = ["http://127.0.0.1:3500", "http://localhost:3500", undefined];
 const corsOption = {
   origin: (origin, callback) => {
-    if (whiteList.includes(origin) !== -1) {
+    if (whiteList.includes(origin) ) {
+        console.log(` CORS: ${origin}`);
       callback(null, true);
     } else {
+        console.warn(`Blocked by CORS: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  optionsSuccesStatus: 200,
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOption));
 //
 // end of cors access
 app.use("/", require("./routes/root"));
 app.use("/subdir", require("./routes/subdir"));
+app.use("/employees", require("./routes/api/employees"));
 //
 
 app.all("/*splat", (req, res) => {
